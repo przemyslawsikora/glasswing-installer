@@ -1,0 +1,36 @@
+---
+- name: Manage an admin user
+  hosts: all
+  connection: local
+  become: yes
+  roles:
+    - users
+
+- name: Prepare server
+  hosts: all
+  connection: local
+  become: yes
+  roles:
+    - sshd
+
+- name: Install Docker
+  hosts: all
+  connection: local
+  become: yes
+  roles:
+    - geerlingguy.docker
+    - geerlingguy.pip
+  vars:
+    docker_users:
+      - admin
+    pip_install_packages:
+      - name: docker
+
+- name: Create common Docker network
+  hosts: all
+  connection: local
+  become: yes
+  tasks:
+    - name: Create common Docker network
+      docker_network:
+        name: glasswing-network
