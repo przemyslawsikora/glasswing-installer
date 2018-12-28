@@ -30,7 +30,18 @@
   hosts: all
   connection: local
   become: yes
+  vars_files:
+    - vars/all.yml
   tasks:
     - name: Create common Docker network
       docker_network:
-        name: glasswing-network
+        name: "{{ docker_network_name }}"
+
+- name: Install Zookeeper
+  hosts: all
+  connection: local
+  become: yes
+  vars_files:
+    - vars/all.yml
+  roles:
+    - zookeeper

@@ -1,0 +1,27 @@
+---
+- name: Pull Zookeeper image
+  docker_image:
+    name: zookeeper
+    tag: 3.4.13
+
+- name: Create Zookeeper data volume
+  docker_volume:
+    name: zookeeper_data
+
+- name: Create Zookeeper logs volume
+  docker_volume:
+    name: zookeeper_logs
+
+- name: Create Zookeeper container
+  docker_container:
+    name: zookeeper
+    image: zookeeper:3.4.13
+    restart_policy: always
+    networks:
+      - name: "{{ docker_network_name }}"
+    volumes:
+      - zookeeper_data:/data
+      - zookeeper_logs:/datalog
+    env:
+      ZOO_MY_ID: 1
+      ZOO_AUTOPURGE_PURGEINTERVAL: 3
