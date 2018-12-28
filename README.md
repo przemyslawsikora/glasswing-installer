@@ -23,9 +23,9 @@
    ansible-galaxy install -r requirements.yml
    ```
 10. Run installer with admin password
-   ```bash
-   ansible-playbook site.yml -i production --extra-vars "adminpassword=<ADMIN_PASSWORD>"
-   ```
+    ```bash
+    ansible-playbook site.yml -i production --extra-vars "adminpassword=<ADMIN_PASSWORD>"
+    ```
 
 After installation, you can send messages to the system via:
 - kafka protocol on port 9092
