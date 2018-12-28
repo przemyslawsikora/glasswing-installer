@@ -45,3 +45,12 @@
     - vars/all.yml
   roles:
     - zookeeper
+
+- name: Install Kafka
+  hosts: all
+  connection: local
+  become: yes
+  vars_files:
+    - vars/all.yml
+  roles:
+    - kafka
