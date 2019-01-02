@@ -27,7 +27,7 @@
 
 - name: Create Kafka REST Proxy container
   docker_container:
-    name: kafkarest
+    name: kafka-rest
     image: confluentinc/cp-kafka-rest:5.1.0
     restart_policy: always
     networks:
@@ -49,7 +49,7 @@
 
 - name: Create Kafka manager container
   docker_container:
-    name: kafkamanager
+    name: kafka-manager
     image: sheepkiller/kafka-manager:latest
     restart_policy: always
     networks:
@@ -58,3 +58,19 @@
       - 9000:9000
     env:
       ZK_HOSTS: zookeeper:2181
+
+- name: Create Kafka topic 'measurements'
+  docker_container:
+    name: kafka-topic-measurements
+    image: confluentinc/cp-kafka:5.1.0
+    auto_remove: yes
+    networks:
+      - name: "{{ docker_network_name }}"
+    command:
+      - kafka-topics
+      - --create
+      - --topic measurements
+      - --partitions 1
+      - --replication-factor 1
+      - --if-not-exists
+      - --zookeeper zookeeper:2181
