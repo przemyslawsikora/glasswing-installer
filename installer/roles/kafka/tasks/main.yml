@@ -9,16 +9,27 @@
     name: kafka
     image: confluentinc/cp-kafka:5.1.0
     restart_policy: always
+    network_mode: "{{ docker_network_name }}"
     networks:
       - name: "{{ docker_network_name }}"
-    ports:
+        aliases:
+          - kafka
+    hostname: kafka
+    published_ports:
       - 9092:9092
-      - 49999:49999
+      - 9099:9099
     env:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://{{ ip_address }}:9092"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_JMX_PORT: 49999
+      KAFKA_JMX_PORT: 9099
+      KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote \
+        -Dcom.sun.management.jmxremote.authenticate=false \
+        -Dcom.sun.management.jmxremote.ssl=false \
+        -Djava.rmi.server.hostname=kafka \
+        -Dcom.sun.management.jmxremote.port=9099 \
+        -Dcom.sun.management.jmxremote.rmi.port=9099 \
+        -Dcom.sun.management.jmxremote.local.only=false"
 
 - name: Pull Kafka REST Proxy image
   docker_image:
@@ -30,9 +41,13 @@
     name: kafka-rest
     image: confluentinc/cp-kafka-rest:5.1.0
     restart_policy: always
+    network_mode: "{{ docker_network_name }}"
     networks:
       - name: "{{ docker_network_name }}"
-    ports:
+        aliases:
+          - kafkarest
+    hostname: kafkarest
+    published_ports:
       - 8082:8082
     env:
       KAFKA_REST_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -52,10 +67,14 @@
     name: kafka-manager
     image: sheepkiller/kafka-manager:latest
     restart_policy: always
+    network_mode: "{{ docker_network_name }}"
     networks:
       - name: "{{ docker_network_name }}"
-    ports:
-      - 9000:9000
+        aliases:
+          - kafkamanager
+    hostname: kafkamanager
+    published_ports:
+      - 127.0.0.1:9000:9000
     env:
       ZK_HOSTS: zookeeper:2181
 
@@ -64,6 +83,7 @@
     name: kafka-topic-measurements
     image: confluentinc/cp-kafka:5.1.0
     auto_remove: yes
+    network_mode: "{{ docker_network_name }}"
     networks:
       - name: "{{ docker_network_name }}"
     command:

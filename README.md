@@ -38,4 +38,10 @@ After installation, you can send messages to the system via:
     "http://<ip_address>:8082/topics/messages"
   ```
 
-Kafka Manager is available on http://<ip_address>:9000
+There have been installed managers to monitor the cluster.  
+The access is possible only from inside of the machine.
+```
+Kafka Manager   http://localhost:9000/
+Spark Master    http://localhost:8080/
+Spark Worker    http://localhost:8081/
+```

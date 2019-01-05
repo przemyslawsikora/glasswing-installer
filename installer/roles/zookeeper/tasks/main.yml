@@ -17,8 +17,12 @@
     name: zookeeper
     image: zookeeper:3.4.13
     restart_policy: always
+    network_mode: "{{ docker_network_name }}"
     networks:
       - name: "{{ docker_network_name }}"
+        aliases:
+          - zookeeper
+    hostname: zookeeper
     volumes:
       - zookeeper_data:/data
       - zookeeper_logs:/datalog

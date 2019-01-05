@@ -54,3 +54,12 @@
     - vars/all.yml
   roles:
     - kafka
+
+- name: Install Spark
+  hosts: all
+  connection: local
+  become: yes
+  vars_files:
+    - vars/all.yml
+  roles:
+    - spark
